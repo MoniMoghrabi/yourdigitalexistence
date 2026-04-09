@@ -5,6 +5,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import GiscusComments from "@/components/GiscusComments";
 
 const BLOG_DIR = path.join(process.cwd(), "content/blog");
 
@@ -62,6 +63,8 @@ export default async function BlogPost({
       <article className="prose prose-slate prose-headings:font-semibold prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-hr:border-slate-100 max-w-none">
         <MDXRemote source={content} />
       </article>
+
+      <GiscusComments />
     </div>
   );
 }
