@@ -228,73 +228,67 @@ export default function PrivacyQuiz() {
   }
 
   const scoreLabel =
-    pct >= 90
-      ? "Privacy expert"
-      : pct >= 70
-      ? "Privacy-aware"
-      : pct >= 50
-      ? "Getting there"
-      : "Room to grow";
+    pct >= 90 ? "Privacy Expert" :
+    pct >= 70 ? "Privacy-Aware" :
+    pct >= 50 ? "Getting There" :
+    "Room to Grow";
 
-  const scoreBg =
-    pct >= 90
-      ? "bg-green-50 border-green-200"
-      : pct >= 70
-      ? "bg-blue-50 border-blue-200"
-      : pct >= 50
-      ? "bg-yellow-50 border-yellow-200"
-      : "bg-orange-50 border-orange-200";
+  const scoreBorderColor =
+    pct >= 90 ? "border-[#00353A]" :
+    pct >= 70 ? "border-[#FBBC00]" :
+    pct >= 50 ? "border-[#70797A]" :
+    "border-[#1A1C19]";
 
-  const scoreText =
-    pct >= 90
-      ? "text-green-700"
-      : pct >= 70
-      ? "text-blue-700"
-      : pct >= 50
-      ? "text-yellow-700"
-      : "text-orange-700";
+  const scoreLabelStyle =
+    pct >= 90 ? "bg-[#00353A] text-white" :
+    pct >= 70 ? "bg-[#FBBC00] text-[#261A00]" :
+    pct >= 50 ? "bg-[#70797A] text-white" :
+    "bg-[#1A1C19] text-white";
 
   if (submitted) {
     return (
       <div>
-        <div className={`rounded-2xl border p-8 mb-10 ${scoreBg}`}>
-          <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium mb-3 ${scoreText} bg-white/60`}>
+        <div className={`border-l-4 ${scoreBorderColor} bg-[#F4F4EF] p-10 mb-10`}>
+          <span className={`inline-block px-4 py-1 font-label text-xs font-bold uppercase tracking-widest mb-4 ${scoreLabelStyle}`}>
             {scoreLabel}
           </span>
-          <p className={`text-5xl font-bold mb-1 ${scoreText}`}>
-            {correct} / {total}
-          </p>
-          <p className="text-slate-500 text-sm">correct answers ({pct}%)</p>
+          <div className="flex items-end gap-4 mb-2">
+            <p className="font-headline text-6xl font-black text-[#00353A]">{correct}</p>
+            <p className="font-headline text-2xl text-[#70797A] mb-2">/ {total}</p>
+          </div>
+          <p className="font-label text-xs uppercase tracking-widest text-[#70797A]">correct answers ({pct}%)</p>
         </div>
 
-        <div className="space-y-6 mb-10">
+        <div className="space-y-0 divide-y divide-[#E3E3DE] border border-[#E3E3DE] mb-10">
           {questions.map((q) => {
             const ans = answers[q.id];
             const chosen = ans ? q.options[ans.selectedIndex] : null;
             return (
-              <div key={q.id} className="border border-slate-100 rounded-xl p-5">
-                <p className="font-medium text-slate-800 mb-3">{q.text}</p>
+              <div key={q.id} className="p-8">
+                <p className="font-headline font-bold text-[#1A1C19] mb-4">{q.text}</p>
                 {chosen && (
                   <div
-                    className={`flex gap-3 p-3 rounded-lg text-sm ${
+                    className={`flex gap-4 p-5 font-body text-sm mb-3 ${
                       ans.isCorrect
-                        ? "bg-green-50 text-green-800"
-                        : "bg-red-50 text-red-800"
+                        ? "bg-[#F4F4EF] border-l-4 border-[#00353A] text-[#1A1C19]"
+                        : "bg-[#EEEEE9] border-l-4 border-[#70797A] text-[#1A1C19]"
                     }`}
                   >
-                    <span>{ans.isCorrect ? "✓" : "✗"}</span>
+                    <span className="material-symbols-outlined text-base shrink-0 mt-0.5">
+                      {ans.isCorrect ? "check_circle" : "cancel"}
+                    </span>
                     <div>
-                      <p className="font-medium mb-1">{chosen.label}</p>
-                      <p className="text-xs opacity-80">{chosen.explanation}</p>
+                      <p className="font-headline font-bold mb-1">{chosen.label}</p>
+                      <p className="text-xs text-[#40484A] leading-relaxed">{chosen.explanation}</p>
                     </div>
                   </div>
                 )}
-                {!ans.isCorrect && (
-                  <div className="mt-2 flex gap-3 p-3 rounded-lg text-sm bg-green-50 text-green-800">
-                    <span>✓</span>
+                {ans && !ans.isCorrect && (
+                  <div className="flex gap-4 p-5 font-body text-sm bg-[#F4F4EF] border-l-4 border-[#FBBC00]">
+                    <span className="material-symbols-outlined text-[#FBBC00] text-base shrink-0 mt-0.5">lightbulb</span>
                     <div>
-                      <p className="font-medium mb-1">
-                        Correct answer: {q.options.find((o) => o.correct)?.label}
+                      <p className="font-headline font-bold text-[#1A1C19] mb-1">
+                        Correct: {q.options.find((o) => o.correct)?.label}
                       </p>
                     </div>
                   </div>
@@ -306,7 +300,7 @@ export default function PrivacyQuiz() {
 
         <button
           onClick={handleReset}
-          className="text-sm text-slate-500 underline hover:text-slate-700"
+          className="font-label text-xs uppercase tracking-widest text-[#70797A] border-b border-[#70797A] hover:text-[#00353A] hover:border-[#00353A] transition-colors"
         >
           Try again
         </button>
@@ -316,42 +310,49 @@ export default function PrivacyQuiz() {
 
   return (
     <div>
-      <div className="mb-8">
-        <div className="flex justify-between text-xs text-slate-400 mb-2">
+      {/* Progress */}
+      <div className="mb-10 p-6 bg-[#F4F4EF] border border-[#E3E3DE]">
+        <div className="flex justify-between font-label text-xs uppercase tracking-widest text-[#70797A] mb-3">
           <span>{answered} of {total} answered</span>
           <span>{Math.round((answered / total) * 100)}%</span>
         </div>
-        <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+        <div className="h-1.5 bg-[#E3E3DE] overflow-hidden">
           <div
-            className="h-full bg-blue-500 rounded-full transition-all duration-300"
+            className="h-full bg-[#00353A] transition-all duration-300"
             style={{ width: `${(answered / total) * 100}%` }}
           />
         </div>
       </div>
 
-      <div className="space-y-8">
+      {/* Questions */}
+      <div className="space-y-0 divide-y divide-[#E3E3DE] border border-[#E3E3DE]">
         {questions.map((q, qi) => {
           const ans = answers[q.id];
           return (
-            <div key={q.id}>
-              <p className="font-medium text-slate-800 mb-3">
-                <span className="text-blue-500 mr-2">{qi + 1}.</span>
+            <div key={q.id} className="p-8 relative">
+              <div className="absolute top-8 left-0 text-5xl font-headline font-black text-[#E3E3DE] select-none leading-none -translate-x-1 pointer-events-none">
+                {String(qi + 1).padStart(2, "0")}
+              </div>
+              <p className="font-headline font-bold text-lg text-[#1A1C19] mb-5 pl-12">
                 {q.text}
               </p>
-              <div className="space-y-2">
+              <div className="pl-12 space-y-2">
                 {q.options.map((opt, oi) => {
                   const isSelected = ans?.selectedIndex === oi;
                   return (
                     <button
                       key={oi}
                       onClick={() => handleSelect(q.id, oi, opt.correct)}
-                      className={`w-full text-left px-4 py-3 rounded-lg border text-sm transition-all ${
+                      className={`w-full text-left px-6 py-4 font-body text-sm transition-all duration-200 flex items-center justify-between ${
                         isSelected
-                          ? "border-blue-500 bg-blue-50 text-blue-800 font-medium"
-                          : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                          ? "bg-[#00353A] text-white border border-[#00353A]"
+                          : "bg-[#FAFAF5] text-[#40484A] border border-[#E3E3DE] hover:bg-[#F4F4EF] hover:border-[#BFC8C9]"
                       }`}
                     >
                       {opt.label}
+                      {isSelected && (
+                        <span className="material-symbols-outlined text-[#FBBC00] text-lg shrink-0 ml-3">check_circle</span>
+                      )}
                     </button>
                   );
                 })}
@@ -361,15 +362,16 @@ export default function PrivacyQuiz() {
         })}
       </div>
 
-      <div className="mt-10">
+      {/* Submit */}
+      <div className="mt-8">
         <button
           onClick={() => setSubmitted(true)}
           disabled={answered < total}
-          className="w-full py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-full py-4 bg-[#00353A] text-white font-label font-black uppercase tracking-widest text-sm hover:bg-[#FBBC00] hover:text-[#261A00] transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-[#00353A] disabled:hover:text-white"
         >
           {answered < total
             ? `Answer all questions to see your score (${total - answered} remaining)`
-            : "See my score →"}
+            : "See My Score →"}
         </button>
       </div>
     </div>

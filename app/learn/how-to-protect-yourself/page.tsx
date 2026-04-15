@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 const steps = [
   {
     number: "01",
+    icon: "key",
     title: "Use a password manager",
     effort: "30 min setup",
     impact: "Very high",
@@ -17,6 +18,7 @@ const steps = [
   },
   {
     number: "02",
+    icon: "phonelink_lock",
     title: "Enable two-factor authentication (2FA)",
     effort: "5 min per account",
     impact: "Very high",
@@ -24,6 +26,7 @@ const steps = [
   },
   {
     number: "03",
+    icon: "tune",
     title: "Review your app permissions",
     effort: "15 min",
     impact: "High",
@@ -31,6 +34,7 @@ const steps = [
   },
   {
     number: "04",
+    icon: "public",
     title: "Use a browser that respects your privacy",
     effort: "10 min",
     impact: "Medium",
@@ -38,6 +42,7 @@ const steps = [
   },
   {
     number: "05",
+    icon: "policy",
     title: "Check if your data has been breached",
     effort: "2 min",
     impact: "Informational",
@@ -45,6 +50,7 @@ const steps = [
   },
   {
     number: "06",
+    icon: "lock_person",
     title: "Tighten your social media privacy settings",
     effort: "20 min",
     impact: "Medium",
@@ -52,6 +58,7 @@ const steps = [
   },
   {
     number: "07",
+    icon: "link_off",
     title: "Be cautious with &ldquo;Sign in with Google/Facebook&rdquo;",
     effort: "Ongoing",
     impact: "Medium",
@@ -59,6 +66,7 @@ const steps = [
   },
   {
     number: "08",
+    icon: "vpn_lock",
     title: "Use a VPN on public Wi-Fi",
     effort: "5 min setup",
     impact: "Situational",
@@ -66,70 +74,104 @@ const steps = [
   },
 ];
 
+const impactColor: Record<string, string> = {
+  "Very high": "bg-[#00353A] text-white",
+  "High": "bg-[#004D54] text-[#81bdc4]",
+  "Medium": "bg-[#EEEEE9] text-[#40484A]",
+  "Informational": "bg-[#F4F4EF] text-[#70797A]",
+  "Situational": "bg-[#F4F4EF] text-[#70797A]",
+};
+
 export default function HowToProtectPage() {
   return (
-    <div className="max-w-2xl mx-auto px-6 py-16">
-      <Link
-        href="/learn"
-        className="text-sm text-slate-400 hover:text-slate-600 transition-colors mb-8 inline-block"
-      >
-        ← Back to Learn
-      </Link>
-
-      <header className="mb-10">
-        <div className="flex items-center gap-3 mb-4 text-xs text-slate-400">
-          <span>7 min read</span>
+    <>
+      {/* Article header */}
+      <section className="bg-[#00353A] px-8 py-16">
+        <div className="max-w-3xl mx-auto">
+          <Link
+            href="/learn"
+            className="inline-flex items-center gap-2 font-label text-xs uppercase tracking-widest text-[#FAFAF5]/60 hover:text-[#FBBC00] transition-colors mb-8"
+          >
+            <span className="material-symbols-outlined text-base">arrow_back</span>
+            Back to Learn
+          </Link>
+          <div className="inline-block bg-[#FBBC00] text-[#261A00] px-3 py-1 font-label text-[10px] font-bold uppercase tracking-[0.2em] mb-6">
+            Module 03 · 7 min read
+          </div>
+          <h1 className="font-headline text-4xl md:text-5xl font-bold text-white leading-tight tracking-tighter mb-4">
+            How to Protect Yourself
+          </h1>
+          <p className="font-body text-white/70 text-lg leading-relaxed max-w-xl">
+            You don&apos;t need to be a tech expert to meaningfully reduce your digital footprint.
+            These eight steps are practical, free or cheap, and ordered by impact. Start at the top.
+          </p>
         </div>
-        <h1 className="text-3xl font-bold text-slate-900 mb-3">How to Protect Yourself</h1>
-        <p className="text-slate-500">
-          You don&apos;t need to be a tech expert to meaningfully reduce your digital
-          footprint. These eight steps are practical, free or cheap, and ordered by impact.
-          Start at the top.
-        </p>
-      </header>
+      </section>
 
-      <div className="space-y-8">
-        {steps.map(({ number, title, effort, impact, body }) => (
-          <div key={number} className="border border-slate-100 rounded-xl p-6">
-            <div className="flex items-start justify-between gap-4 mb-3">
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-mono text-blue-400 font-semibold">{number}</span>
-                <h2 className="font-semibold text-slate-900">{title}</h2>
+      {/* Steps */}
+      <section className="px-8 py-16 bg-[#FAFAF5]">
+        <div className="max-w-3xl mx-auto">
+          <div className="space-y-0 divide-y divide-[#E3E3DE] border border-[#E3E3DE]">
+            {steps.map(({ number, icon, title, effort, impact, body }) => (
+              <div key={number} className="p-8 relative bg-[#FAFAF5] hover:bg-[#F4F4EF] transition-colors">
+                <div className="flex items-start justify-between gap-4 mb-4">
+                  <div className="flex items-center gap-4">
+                    <span className="material-symbols-outlined text-[#FBBC00] text-2xl shrink-0">{icon}</span>
+                    <h2 className="font-headline font-bold text-lg text-[#1A1C19]">{title}</h2>
+                  </div>
+                  <div className="flex gap-2 shrink-0 flex-wrap justify-end">
+                    <span className="font-label text-[10px] px-3 py-1 uppercase tracking-widest bg-[#EEEEE9] text-[#70797A]">
+                      {effort}
+                    </span>
+                    <span className={`font-label text-[10px] px-3 py-1 uppercase tracking-widest ${impactColor[impact] ?? "bg-[#EEEEE9] text-[#40484A]"}`}>
+                      {impact}
+                    </span>
+                  </div>
+                </div>
+                <p
+                  className="font-body text-sm text-[#40484A] leading-relaxed pl-10"
+                  dangerouslySetInnerHTML={{ __html: body }}
+                />
               </div>
-              <div className="flex gap-2 shrink-0">
-                <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">
-                  {effort}
-                </span>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600">
-                  {impact}
-                </span>
+            ))}
+          </div>
+
+          {/* Key callout */}
+          <div className="mt-12 p-10 bg-[#F4F4EF] border-l-4 border-[#FBBC00]">
+            <div className="flex items-start gap-4">
+              <span className="material-symbols-outlined text-[#FBBC00] text-3xl shrink-0">tips_and_updates</span>
+              <div>
+                <h3 className="font-headline font-bold text-[#1A1C19] mb-2 uppercase tracking-tight">
+                  The most important thing
+                </h3>
+                <p className="font-body text-sm text-[#70797A] leading-relaxed">
+                  Don&apos;t try to do everything at once. Pick the top two items on this list and do
+                  them this week. Small, consistent steps compound over time. You don&apos;t need to
+                  disappear from the internet — you just need to be intentional about it.
+                </p>
               </div>
             </div>
-            <p
-              className="text-sm text-slate-600 leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: body }}
-            />
           </div>
-        ))}
-      </div>
 
-      <div className="mt-12 p-6 bg-green-50 border border-green-100 rounded-xl">
-        <h3 className="font-semibold text-green-900 mb-2">The most important thing</h3>
-        <p className="text-sm text-green-800">
-          Don&apos;t try to do everything at once. Pick the top two items on this list and do
-          them this week. Small, consistent steps compound over time. You don&apos;t need to
-          disappear from the internet — you just need to be intentional about it.
-        </p>
-      </div>
-
-      <nav className="mt-12 pt-8 border-t border-slate-100 flex justify-between text-sm">
-        <Link href="/learn/why-it-matters" className="text-blue-600 hover:underline">
-          ← Why it matters
-        </Link>
-        <Link href="/tools/footprint-calculator" className="text-blue-600 hover:underline">
-          Check your footprint →
-        </Link>
-      </nav>
-    </div>
+          {/* Article nav */}
+          <nav className="mt-16 pt-8 border-t-2 border-[#E3E3DE] flex justify-between items-center">
+            <Link
+              href="/learn/why-it-matters"
+              className="inline-flex items-center gap-2 font-label text-xs uppercase tracking-widest text-[#00353A] border-b-2 border-[#00353A] pb-0.5 hover:text-[#FBBC00] hover:border-[#FBBC00] transition-colors"
+            >
+              <span className="material-symbols-outlined text-base">arrow_back</span>
+              Why it matters
+            </Link>
+            <Link
+              href="/tools/footprint-calculator"
+              className="inline-flex items-center gap-2 font-label text-xs uppercase tracking-widest text-[#00353A] border-b-2 border-[#00353A] pb-0.5 hover:text-[#FBBC00] hover:border-[#FBBC00] transition-colors"
+            >
+              Check your footprint
+              <span className="material-symbols-outlined text-base">arrow_forward</span>
+            </Link>
+          </nav>
+        </div>
+      </section>
+    </>
   );
 }

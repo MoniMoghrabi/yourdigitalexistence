@@ -10,26 +10,34 @@ export const metadata: Metadata = {
 
 export default function PrivacyQuizPage() {
   return (
-    <div className="max-w-2xl mx-auto px-6 py-16">
-      <Link
-        href="/tools"
-        className="text-sm text-slate-400 hover:text-slate-600 transition-colors mb-8 inline-block"
-      >
-        ← All tools
-      </Link>
+    <>
+      <section className="bg-[#00353A] px-8 py-16">
+        <div className="max-w-3xl mx-auto">
+          <Link
+            href="/tools"
+            className="inline-flex items-center gap-2 font-label text-xs uppercase tracking-widest text-[#FAFAF5]/60 hover:text-[#FBBC00] transition-colors mb-8"
+          >
+            <span className="material-symbols-outlined text-base">arrow_back</span>
+            All Tools
+          </Link>
+          <div className="inline-block bg-[#FBBC00] text-[#261A00] px-3 py-1 font-label text-[10px] font-bold uppercase tracking-[0.2em] mb-6">
+            8 questions · ~3 min
+          </div>
+          <h1 className="font-headline text-4xl md:text-5xl font-bold text-white leading-tight tracking-tighter mb-4">
+            Privacy Quiz
+          </h1>
+          <p className="font-body text-white/70 text-lg leading-relaxed max-w-xl">
+            How well do you actually understand online privacy? Test your knowledge on trackers,
+            data brokers, VPNs, and everyday browser behaviour.
+          </p>
+        </div>
+      </section>
 
-      <header className="mb-10">
-        <span className="inline-block mb-3 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-medium">
-          8 questions · ~3 min
-        </span>
-        <h1 className="text-3xl font-bold text-slate-900 mb-3">Privacy Quiz</h1>
-        <p className="text-slate-500">
-          How well do you actually understand online privacy? Test your knowledge on
-          trackers, data brokers, VPNs, and everyday browser behaviour.
-        </p>
-      </header>
-
-      <PrivacyQuiz />
-    </div>
+      <section className="px-8 py-16 bg-[#FAFAF5]">
+        <div className="max-w-3xl mx-auto">
+          <PrivacyQuiz />
+        </div>
+      </section>
+    </>
   );
 }

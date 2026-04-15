@@ -85,7 +85,7 @@ const questions: Question[] = [
 
 interface Result {
   label: string;
-  colour: string;
+  icon: string;
   summary: string;
   actions: string[];
 }
@@ -93,8 +93,8 @@ interface Result {
 function getResult(score: number): Result {
   if (score <= 4) {
     return {
-      label: "Small footprint",
-      colour: "green",
+      label: "Small Footprint",
+      icon: "verified",
       summary:
         "You're already pretty mindful about your online presence. Your habits limit how much data is collected about you — keep it up.",
       actions: [
@@ -106,8 +106,8 @@ function getResult(score: number): Result {
   }
   if (score <= 8) {
     return {
-      label: "Moderate footprint",
-      colour: "yellow",
+      label: "Moderate Footprint",
+      icon: "info",
       summary:
         "You have a typical digital footprint — not huge, but there are a few areas where small changes would meaningfully reduce your exposure.",
       actions: [
@@ -119,8 +119,8 @@ function getResult(score: number): Result {
   }
   if (score <= 12) {
     return {
-      label: "Large footprint",
-      colour: "orange",
+      label: "Large Footprint",
+      icon: "warning",
       summary:
         "A fair amount of your online behaviour creates data that companies can collect, profile, and sell. The good news: a few focused changes make a real difference.",
       actions: [
@@ -131,8 +131,8 @@ function getResult(score: number): Result {
     };
   }
   return {
-    label: "Very large footprint",
-    colour: "red",
+    label: "Very Large Footprint",
+    icon: "emergency",
     summary:
       "You leave a significant digital trail. That's common — and fixable. You don't need to change everything at once. Start with the highest-impact habits below.",
     actions: [
@@ -143,11 +143,11 @@ function getResult(score: number): Result {
   };
 }
 
-const colourMap: Record<string, { bg: string; text: string; border: string; badge: string }> = {
-  green:  { bg: "bg-green-50",  text: "text-green-800",  border: "border-green-200",  badge: "bg-green-100 text-green-700"  },
-  yellow: { bg: "bg-yellow-50", text: "text-yellow-800", border: "border-yellow-200", badge: "bg-yellow-100 text-yellow-700" },
-  orange: { bg: "bg-orange-50", text: "text-orange-800", border: "border-orange-200", badge: "bg-orange-100 text-orange-700" },
-  red:    { bg: "bg-red-50",    text: "text-red-800",    border: "border-red-200",    badge: "bg-red-100 text-red-700"       },
+const resultStyles: Record<string, { border: string; bg: string; label: string }> = {
+  "Small Footprint":     { border: "border-[#00353A]", bg: "bg-[#F4F4EF]", label: "bg-[#00353A] text-white" },
+  "Moderate Footprint":  { border: "border-[#FBBC00]", bg: "bg-[#FAFAF5]", label: "bg-[#FBBC00] text-[#261A00]" },
+  "Large Footprint":     { border: "border-[#70797A]", bg: "bg-[#FAFAF5]", label: "bg-[#70797A] text-white" },
+  "Very Large Footprint":{ border: "border-[#1A1C19]", bg: "bg-[#EEEEE9]", label: "bg-[#1A1C19] text-white" },
 };
 
 export default function FootprintCalculator() {
@@ -158,10 +158,10 @@ export default function FootprintCalculator() {
   const total = questions.length;
   const score = Object.values(answers).reduce((a, b) => a + b, 0);
   const result = getResult(score);
-  const colours = colourMap[result.colour];
+  const styles = resultStyles[result.label] ?? resultStyles["Moderate Footprint"];
 
-  function handleSelect(id: string, score: number) {
-    setAnswers((prev) => ({ ...prev, [id]: score }));
+  function handleSelect(id: string, s: number) {
+    setAnswers((prev) => ({ ...prev, [id]: s }));
   }
 
   function handleReset() {
@@ -171,23 +171,29 @@ export default function FootprintCalculator() {
 
   if (submitted) {
     return (
-      <div className={`rounded-2xl border p-8 ${colours.bg} ${colours.border}`}>
-        <div className="mb-6">
-          <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium mb-3 ${colours.badge}`}>
+      <div className={`border-l-4 ${styles.border} ${styles.bg} p-10`}>
+        <div className="mb-8">
+          <span className={`inline-block px-4 py-1 font-label text-xs font-bold uppercase tracking-widest mb-4 ${styles.label}`}>
             {result.label}
           </span>
-          <p className={`text-5xl font-bold mb-1 ${colours.text}`}>{score} / 16</p>
-          <p className="text-slate-500 text-sm">Your digital footprint score</p>
+          <div className="flex items-end gap-4 mb-2">
+            <p className="font-headline text-6xl font-black text-[#00353A]">{score}</p>
+            <p className="font-headline text-2xl text-[#70797A] mb-2">/ 16</p>
+          </div>
+          <p className="font-label text-xs uppercase tracking-widest text-[#70797A]">Your digital footprint score</p>
         </div>
 
-        <p className={`text-base mb-6 ${colours.text}`}>{result.summary}</p>
+        <p className="font-body text-base text-[#1A1C19] leading-relaxed mb-8 max-w-xl">{result.summary}</p>
 
-        <div className="bg-white/70 rounded-xl p-6 mb-6">
-          <h3 className="font-semibold text-slate-900 mb-4">Your 3 actions for this week</h3>
-          <ol className="space-y-3">
+        <div className="bg-white border border-[#E3E3DE] p-8 mb-8">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="material-symbols-outlined text-[#FBBC00] text-2xl">task_alt</span>
+            <h3 className="font-headline font-bold text-[#1A1C19] uppercase tracking-tight">Your 3 Actions for This Week</h3>
+          </div>
+          <ol className="space-y-4">
             {result.actions.map((action, i) => (
-              <li key={i} className="flex gap-3 text-sm text-slate-700">
-                <span className="font-bold text-blue-600 shrink-0">{i + 1}.</span>
+              <li key={i} className="flex gap-4 font-body text-sm text-[#40484A] leading-relaxed">
+                <span className="font-headline font-black text-[#FBBC00] shrink-0 text-lg leading-none mt-0.5">{i + 1}.</span>
                 {action}
               </li>
             ))}
@@ -196,7 +202,7 @@ export default function FootprintCalculator() {
 
         <button
           onClick={handleReset}
-          className="text-sm text-slate-500 underline hover:text-slate-700"
+          className="font-label text-xs uppercase tracking-widest text-[#70797A] border-b border-[#70797A] hover:text-[#00353A] hover:border-[#00353A] transition-colors"
         >
           Start over
         </button>
@@ -206,42 +212,47 @@ export default function FootprintCalculator() {
 
   return (
     <div>
-      {/* Progress bar */}
-      <div className="mb-8">
-        <div className="flex justify-between text-xs text-slate-400 mb-2">
+      {/* Progress */}
+      <div className="mb-10 p-6 bg-[#F4F4EF] border border-[#E3E3DE]">
+        <div className="flex justify-between font-label text-xs uppercase tracking-widest text-[#70797A] mb-3">
           <span>{answered} of {total} answered</span>
           <span>{Math.round((answered / total) * 100)}%</span>
         </div>
-        <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+        <div className="h-1.5 bg-[#E3E3DE] overflow-hidden">
           <div
-            className="h-full bg-blue-500 rounded-full transition-all duration-300"
+            className="h-full bg-[#00353A] transition-all duration-300"
             style={{ width: `${(answered / total) * 100}%` }}
           />
         </div>
       </div>
 
       {/* Questions */}
-      <div className="space-y-8">
+      <div className="space-y-0 divide-y divide-[#E3E3DE] border border-[#E3E3DE]">
         {questions.map((q, qi) => (
-          <div key={q.id}>
-            <p className="font-medium text-slate-800 mb-3">
-              <span className="text-blue-500 mr-2">{qi + 1}.</span>
+          <div key={q.id} className="p-8 relative group">
+            <div className="absolute -left-0 top-8 text-5xl font-headline font-black text-[#E3E3DE] select-none leading-none">
+              {String(qi + 1).padStart(2, "0")}
+            </div>
+            <p className="font-headline font-bold text-lg text-[#1A1C19] mb-5 pl-12">
               {q.text}
             </p>
-            <div className="space-y-2">
+            <div className="pl-12 space-y-2">
               {q.options.map((opt) => {
                 const selected = answers[q.id] === opt.score;
                 return (
                   <button
                     key={opt.label}
                     onClick={() => handleSelect(q.id, opt.score)}
-                    className={`w-full text-left px-4 py-3 rounded-lg border text-sm transition-all ${
+                    className={`w-full text-left px-6 py-4 font-body text-sm transition-all duration-200 flex items-center justify-between ${
                       selected
-                        ? "border-blue-500 bg-blue-50 text-blue-800 font-medium"
-                        : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                        ? "bg-[#00353A] text-white border border-[#00353A]"
+                        : "bg-[#FAFAF5] text-[#40484A] border border-[#E3E3DE] hover:bg-[#F4F4EF] hover:border-[#BFC8C9]"
                     }`}
                   >
                     {opt.label}
+                    {selected && (
+                      <span className="material-symbols-outlined text-[#FBBC00] text-lg">check_circle</span>
+                    )}
                   </button>
                 );
               })}
@@ -251,15 +262,15 @@ export default function FootprintCalculator() {
       </div>
 
       {/* Submit */}
-      <div className="mt-10">
+      <div className="mt-8">
         <button
           onClick={() => setSubmitted(true)}
           disabled={answered < total}
-          className="w-full py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-full py-4 bg-[#00353A] text-white font-label font-black uppercase tracking-widest text-sm hover:bg-[#FBBC00] hover:text-[#261A00] transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-[#00353A] disabled:hover:text-white"
         >
           {answered < total
             ? `Answer all questions to see your result (${total - answered} remaining)`
-            : "See my footprint →"}
+            : "See My Footprint →"}
         </button>
       </div>
     </div>

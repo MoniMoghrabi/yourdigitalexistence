@@ -39,32 +39,46 @@ export default async function BlogPost({
   const { data: fm, content } = matter(raw);
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-16">
-      {/* Back */}
-      <Link
-        href="/blog"
-        className="text-sm text-slate-400 hover:text-slate-600 transition-colors mb-8 inline-block"
-      >
-        ← All articles
-      </Link>
-
-      {/* Header */}
-      <header className="mb-10">
-        <div className="flex items-center gap-3 mb-4 text-xs text-slate-400">
-          <time>{new Date(fm.date).toLocaleDateString("en-AU", { year: "numeric", month: "long", day: "numeric" })}</time>
-          <span>·</span>
-          <span>{fm.readingTime} read</span>
+    <>
+      {/* Article header */}
+      <section className="bg-[#00353A] px-8 py-16">
+        <div className="max-w-3xl mx-auto">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 font-label text-xs uppercase tracking-widest text-[#FAFAF5]/60 hover:text-[#FBBC00] transition-colors mb-8"
+          >
+            <span className="material-symbols-outlined text-base">arrow_back</span>
+            All Articles
+          </Link>
+          <div className="flex flex-wrap items-center gap-4 mb-6">
+            <span className="font-label text-[10px] uppercase tracking-[0.3em] text-[#FBBC00]">
+              {new Date(fm.date).toLocaleDateString("en-AU", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </span>
+            <span className="font-label text-[10px] uppercase tracking-widest text-[#FAFAF5]/40">
+              // {fm.readingTime} read
+            </span>
+          </div>
+          <h1 className="font-headline text-4xl md:text-5xl font-bold text-white leading-tight tracking-tighter mb-4">
+            {fm.title}
+          </h1>
+          <p className="font-body text-white/70 text-lg leading-relaxed max-w-xl">{fm.description}</p>
         </div>
-        <h1 className="text-3xl font-bold text-slate-900 mb-3">{fm.title}</h1>
-        <p className="text-slate-500">{fm.description}</p>
-      </header>
+      </section>
 
-      {/* MDX content */}
-      <article className="prose prose-slate prose-headings:font-semibold prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-hr:border-slate-100 max-w-none">
-        <MDXRemote source={content} />
-      </article>
+      {/* Article body */}
+      <section className="px-8 py-16 bg-[#FAFAF5]">
+        <div className="max-w-3xl mx-auto">
+          <article className="prose prose-slate prose-headings:font-headline prose-headings:text-[#00353A] prose-headings:uppercase prose-headings:tracking-tight prose-a:text-[#00353A] prose-a:no-underline hover:prose-a:underline prose-strong:text-[#1A1C19] max-w-none font-body text-[#40484A]">
+            <MDXRemote source={content} />
+          </article>
 
-      <GiscusComments />
-    </div>
+          <GiscusComments />
+        </div>
+      </section>
+    </>
   );
 }
